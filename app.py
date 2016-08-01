@@ -8,7 +8,7 @@ import os
 
 
 # Configuration
-SQLALCHEMY_DATABASE_URI = os.environ["DATABASE_URL"]
+# SQLALCHEMY_DATABASE_URI = os.environ["DATABASE_URL"]
 DEBUG = True
 
 app = Flask(__name__)
