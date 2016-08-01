@@ -1,56 +1,69 @@
 <!doctype html>
-
-<html lang="en">
+<html>
 <head>
-	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-	<title>WebcamJS Test Page</title>
-	<style type="text/css">
-		body { font-family: Helvetica, sans-serif; }
-		h2, h3 { margin-top:0; }
-		form { margin-top: 15px; }
-		form > input { margin-right: 15px; }
-		#results { float:right; margin:20px; padding:20px; border:1px solid; background:#ccc; }
-	</style>
+  <meta charset="utf-8">
+  <title>Audio/Video Example - Record Plugin for Video.js</title>
+
+  <link href="../node_modules/video.js/dist/video-js.min.css" rel="stylesheet">
+  <link href="../src/css/videojs.record.css" rel="stylesheet">
+  <link href="css/style.css" rel="stylesheet">
+
+  <script src="../node_modules/video.js/dist/video.min.js"></script>
+  <script src="//cdn.webrtc-experiment.com/RecordRTC.js"></script>
+
+  <script src="../src/js/videojs.record.js"></script>
+
+  <style>
+  /* change player background color */
+  #myVideo {
+      background-color: #E8E884;
+  }
+  </style>
 </head>
 <body>
-	<div id="results">Your captured image will appear here...</div>
 
-	<h1>WebcamJS Test Page</h1>
-	<h3>Demonstrates simple 320x240 capture &amp; display</h3>
+<video id="myVideo" class="video-js vjs-default-skin"></video>
 
-	<div id="my_camera"></div>
+<script>
+var player = videojs("myVideo",
+{
+    controls: true,
+    width: 320,
+    height: 240,
+    plugins: {
+        record: {
+            audio: true,
+            video: true,
+            maxLength: 10,
+            debug: true
+        }
+    }
+});
 
-	<!-- First, include the Webcam.js JavaScript Library -->
-	<script type="text/javascript" src="../static/webcam.min.js"></script>
+// error handling
+player.on('deviceError', function()
+{
+    console.log('device error:', player.deviceErrorCode);
+});
+player.on('error', function(error)
+{
+    console.log('error:', error);
+});
 
-	<!-- Configure a few settings and attach camera -->
-	<script language="JavaScript">
-		Webcam.set({
-			width: 320,
-			height: 240,
-			image_format: 'jpeg',
-			jpeg_quality: 90
-		});
-		Webcam.attach( '#my_camera' );
-	</script>
+// user clicked the record button and started recording
+player.on('startRecord', function()
+{
+    console.log('started recording!');
+});
 
-	<!-- A button for taking snaps -->
-	<form>
-		<input type=button value="Take Snapshot" onClick="take_snapshot()">
-	</form>
-
-	<!-- Code to handle taking the snapshot and displaying it locally -->
-	<script language="JavaScript">
-		function take_snapshot() {
-			// take snapshot and get image data
-			Webcam.snap( function(data_uri) {
-				// display results in page
-				document.getElementById('results').innerHTML =
-					'<h2>Here is your image:</h2>' +
-					'<img src="'+data_uri+'"/>';
-			} );
-		}
-	</script>
+// user completed recording and stream is available
+player.on('finishRecord', function()
+{
+    // the blob object contains the recorded data that
+    // can be downloaded by the user, stored on server etc.
+    console.log('finished recording: ', player.recordedData);
+});
+</script>
 
 </body>
 </html>
