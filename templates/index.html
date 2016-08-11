@@ -3,7 +3,7 @@
 <html lang="en">
 <head>
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-	<title>Video Freeze test</title>
+	<title>Live ROC test</title>
 	<style type="text/css">
 		body { font-family: Helvetica, sans-serif; }
 		h2, h3 { margin-top:0; }
@@ -13,20 +13,23 @@
 	</style>
 </head>
 <body>
-	<div id="results">Your captured image will appear here...</div>
-
-	<h1>This is you...</h1>
+	<h1>Say cheese!</h1>
 
 	<div id="my_camera"></div>
 
+	<div id="result1">Image 1</div>
+	<div id="result2">Image 2</div>
+
+	<textarea id="uri1" rows="10" cols="80">URI 1</textarea>
+	<textarea id="uri2" rows="10" cols="80">URI 2</textarea>
 	<!-- First, include the Webcam.js JavaScript Library -->
 	<script type="text/javascript" src="../static/webcam.min.js"></script>
 
 	<!-- Configure a few settings and attach camera -->
 	<script language="JavaScript">
 		Webcam.set({
-			width: 640,
-			height: 480,
+			width: 320,
+			height: 240,
 			image_format: 'jpeg',
 			jpeg_quality: 90
 		});
@@ -35,18 +38,21 @@
 
 	<!-- A button for taking snaps -->
 	<form>
-		<input type=button value="Take Snapshot" onClick="take_snapshot()">
+		<input type=button value="Take Snapshot 1" onClick="take_snapshot('1')">
+		<input type=button value="Take Snapshot 2" onClick="take_snapshot('2')">
+		<input type=button value="Compare Images" onClick="#">
 	</form>
 
 	<!-- Code to handle taking the snapshot and displaying it locally -->
 	<script language="JavaScript">
-		function take_snapshot() {
+		function take_snapshot(image_num) {
 			// take snapshot and get image data
 			Webcam.snap( function(data_uri) {
 				// display results in page
-				document.getElementById('results').innerHTML =
-					'<h2>Here is your image:</h2>' +
+				document.getElementById('result'+image_num).innerHTML =
+					'<h2>Image ' + image_num + ': </h2>' +
 					'<img src="'+data_uri+'"/>';
+				document.getElementById('uri'+image_num).innerHTML = data_uri;
 			} );
 		}
 	</script>
